@@ -4,7 +4,7 @@ import { currentLanguage } from './i18n.js';
 // IMPORTANT: To avoid "leaked key" errors, we use a proxy (e.g., Cloudflare Worker).
 // Replace this URL with your actual Cloudflare Worker URL.
 // While you set it up, the code stays clean and your key stays safe.
-const PROXY_URL = "https://tu-worker.tu-usuario.workers.dev";
+const PROXY_URL = "https://hiremind-proxy.ortegoncamilo00.workers.dev";
 
 export async function callGemini(prompt, forJson = true, model = "gemini-1.5-flash") {
     try {
