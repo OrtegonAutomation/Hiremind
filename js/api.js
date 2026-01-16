@@ -1,42 +1,48 @@
 import { currentLanguage } from './i18n.js';
 
-export async function callGemini(prompt, forJson = true, model = "gemini-2.5-flash") {
-    const apiKey = "AIzaSyCqoCrc0pMUVapy0I8mpYzKbWCDrOv-_G8";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+// --- CONFIGURATION ---
+// IMPORTANT: To avoid "leaked key" errors, we use a proxy (e.g., Cloudflare Worker).
+// Replace this URL with your actual Cloudflare Worker URL.
+// While you set it up, the code stays clean and your key stays safe.
+const PROXY_URL = "https://tu-worker.tu-usuario.workers.dev";
 
-    const payload = {
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: forJson ? { responseMimeType: "application/json" } : {}
-    };
-
+export async function callGemini(prompt, forJson = true, model = "gemini-1.5-flash") {
     try {
-        const response = await fetch(apiUrl, {
+        const payload = {
+            model: model,
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: forJson ? { responseMimeType: "application/json" } : {}
+        };
+
+        const response = await fetch(PROXY_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
+
         if (!response.ok) {
             const errorBody = await response.text();
             throw new Error(`API Error: ${response.status} . Body: ${errorBody}`);
         }
+
         const result = await response.json();
         if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0]) {
             const text = result.candidates[0].content.parts[0].text;
             return forJson ? JSON.parse(text) : text;
         } else {
-            throw new Error("Respuesta inválida de la API de Gemini.");
+            throw new Error("Respuesta inválida del Proxy / API.");
         }
     } catch (error) {
-        console.error("Error calling Gemini API:", error);
+        console.error("Error calling Proxy for Gemini:", error);
         throw error;
     }
 }
 
 export async function extractTextFromImage(base64ImageData, mimeType) {
-    const apiKey = "AIzaSyCqoCrc0pMUVapy0I8mpYzKbWCDrOv-_G8";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-
+    // For vision, the same proxy can handle it if you adjust the worker logic.
+    // For now, we point to the proxy as well.
     const payload = {
+        model: "gemini-1.5-flash",
         contents: [
             {
                 role: "user",
@@ -54,7 +60,7 @@ export async function extractTextFromImage(base64ImageData, mimeType) {
     };
 
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(PROXY_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -62,17 +68,17 @@ export async function extractTextFromImage(base64ImageData, mimeType) {
 
         if (!response.ok) {
             const errorBody = await response.text();
-            throw new Error(`API Error (Image to Text): ${response.status} . Body: ${errorBody}`);
+            throw new Error(`API Error (Proxy Vision): ${response.status} . Body: ${errorBody}`);
         }
 
         const result = await response.json();
         if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts[0]) {
             return result.candidates[0].content.parts[0].text;
         } else {
-            throw new Error("No se pudo extraer texto de la imagen.");
+            throw new Error("No se pudo extraer texto de la imagen vía Proxy.");
         }
     } catch (error) {
-        console.error("Error extracting text from image:", error);
+        console.error("Error extracting text via Proxy:", error);
         throw error;
     }
 }
