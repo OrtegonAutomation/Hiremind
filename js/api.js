@@ -26,11 +26,19 @@ export async function callGemini(prompt, forJson = true, model = "gemini-1.5-fla
         }
 
         const result = await response.json();
+
+        // Check for Gemini API errors inside the 200 response
+        if (result.error) {
+            console.error("Gemini API Error details:", result.error);
+            throw new Error(`Gemini API Error: ${result.error.message || 'Unknown error'}`);
+        }
+
         if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0]) {
             const text = result.candidates[0].content.parts[0].text;
             return forJson ? JSON.parse(text) : text;
         } else {
-            throw new Error("Respuesta inválida del Proxy / API.");
+            console.error("Unexpected response structure:", result);
+            throw new Error("Respuesta inválida del Proxy / API. Revisa la consola para más detalles.");
         }
     } catch (error) {
         console.error("Error calling Proxy for Gemini:", error);
