@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireMind | Asistente de Carrera con IA</title>
+
+    <!-- External Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js`;
+    </script>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='%2300A36C' d='M208 0c-38.4 0-70 28.7-75.2 66.1C95.5 81.4 64 120.5 64 168v40c0 39.7 19.4 74.8 49.3 96.6C103.3 317.9 96 341.8 96 368c0 79.5 64.5 144 144 144h16V0h-48zm160 0h-48v512h16c79.5 0 144-64.5 144-144 0-26.2-7.3-50.1-17.3-63.4C492.6 282.8 512 247.7 512 208v-40c0-47.5-31.5-86.6-68.8-101.9C438 28.7 406.4 0 368 0z'/%3E%3C/svg%3E">
+
+
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- Note: Tailwind CDN is used here for demonstration. For production, consider using Tailwind CLI or PostCSS -->
+</head>
+
+<body class="bg-gray-50 antialiased">
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="min-h-screen flex flex-col items-center justify-center animate-fade-in active-view">
+        <header
+            class="bg-white/90 backdrop-blur-md shadow-sm py-4 w-full fixed top-0 left-0 z-40 border-b border-gray-100">
+            <div class="container flex justify-between items-center">
+                <div class="flex items-center group cursor-pointer">
+                    <div
+                        class="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-black text-gray-800 ml-3 tracking-tight">HireMind</h1>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#como-funciona-landing"
+                        class="text-gray-600 hover:text-green-600 font-semibold transition-colors">Cómo Funciona</a>
+                    <a href="#beneficios-landing"
+                        class="text-gray-600 hover:text-green-600 font-semibold transition-colors">Beneficios</a>
+                    <button id="landing-login-register-btn" class="btn-primary-landing !py-2 !px-6 !text-sm">Acceso
+                        Usuarios</button>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero-section w-full pt-32 pb-20 bg-gradient-to-b from-green-50 to-white overflow-hidden">
+            <div class="container relative">
+                <div class="max-w-4xl mx-auto text-center">
+                    <div
+                        class="inline-block px-4 py-1.5 mb-6 text-sm font-bold tracking-wider text-green-700 uppercase bg-green-100 rounded-full animate-bounce">
+                        NUEVA ERA DE BÚSQUEDA LABORAL
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-tight">
+                        Tu CV optimizado para los <span class="text-green-600">algoritmos del mañana.</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        Utiliza IA avanzada para alinear tu perfil con vacantes específicas, superar los filtros ATS y
+                        destacar ante los reclutadores en segundos.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button id="landing-optimize-cv-btn" class="btn-primary-landing">Optimiza tu CV Ahora</button>
+                    </div>
+
+                    <div id="landing-logged-in-message"
+                        class="hidden mt-12 p-6 bg-white rounded-2xl shadow-xl border border-gray-100 inline-block">
+                        <p class="text-lg text-gray-800 mb-4"><span data-i18n="loggedInWelcome">Bienvenido de
+                                nuevo</span>, <span id="logged-in-user-email" class="font-bold text-green-600"></span>
+                        </p>
+                        <button id="landing-go-to-dashboard-btn" class="btn-primary-landing"
+                            data-i18n="goToDashboardButton">Ir al Panel de Control</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="como-funciona-landing" class="section-padding w-full bg-white">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4" data-i18n="howItWorksTitle">¿Cómo
+                        funciona HireMind?</h3>
+                    <div class="w-20 h-1.5 bg-green-600 mx-auto rounded-full"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div class="card p-8 rounded-2xl card-hover-effect">
+                        <div class="feature-icon-landing"><i class="fas fa-file-pdf"></i></div>
+                        <h4 class="text-xl font-bold mb-4">1. Carga tu información</h4>
+                        <p class="text-gray-600 leading-relaxed">Sube tu CV actual o historial laboral. Nuestra IA
+                            estructura tus datos automáticamente.</p>
+                    </div>
+                    <div class="card p-8 rounded-2xl card-hover-effect">
+                        <div class="feature-icon-landing"><i class="fas fa-crosshairs"></i></div>
+                        <h4 class="text-xl font-bold mb-4">2. Selecciona la vacante</h4>
+                        <p class="text-gray-600 leading-relaxed">Pega la descripción del empleo al que aspiras.
+                            Analizamos cada requerimiento.</p>
+                    </div>
+                    <div class="card p-8 rounded-2xl card-hover-effect">
+                        <div class="feature-icon-landing"><i class="fas fa-magic"></i></div>
+                        <h4 class="text-xl font-bold mb-4">3. Obtén tu CV perfecto</h4>
+                        <p class="text-gray-600 leading-relaxed">Recibe un CV optimizado y un plan de acción
+                            personalizado para asegurar tu éxito.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="beneficios-landing" class="section-padding w-full bg-gray-50">
+            <div class="container">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Por qué elegir <span
+                                class="text-green-600">HireMind</span></h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div
+                                    class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 mr-4 flex-shrink-0">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-1">Velocidad Increíble</h5>
+                                    <p class="text-gray-600">Optimiza tu perfil para una vacante en menos de 30
+                                        segundos.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div
+                                    class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 mr-4 flex-shrink-0">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-1">Filtros ATS</h5>
+                                    <p class="text-gray-600">Nuestras plantillas están diseñadas para ser leídas
+                                        perfectamente por sistemas automáticos.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div
+                                    class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 mr-4 flex-shrink-0">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-1">Plan de Carrera</h5>
+                                    <p class="text-gray-600">Si no eres compatible aún, te decimos exactamente qué
+                                        cursos y habilidades necesitas.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl shadow-2xl border border-gray-100">
+                        <div class="flex items-center justify-between mb-8">
+                            <h4 class="font-bold text-gray-800">Análisis de Compatibilidad IA</h4>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">LIVE
+                                PREVIEW</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-green-600 w-[92%] transition-all duration-1000"></div>
+                            </div>
+                            <div class="flex justify-between text-sm font-bold">
+                                <span>Software Engineer Vacancy</span>
+                                <span class="text-green-600">92% Match</span>
+                            </div>
+                            <div class="pt-4 space-y-2">
+                                <div class="p-3 bg-gray-50 rounded-xl text-xs flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i> Python/Django (Experto)
+                                </div>
+                                <div class="p-3 bg-gray-50 rounded-xl text-xs flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i> AWS Cloud Cert (Válido)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section-padding w-full bg-green-600 text-white">
+            <div class="container text-center">
+                <h3 class="text-4xl font-bold mb-8">¿Listo para dar el siguiente paso en tu carrera?</h3>
+                <button id="landing-start-free-btn"
+                    class="bg-white text-green-600 font-black py-4 px-10 rounded-2xl shadow-xl hover:scale-105 transition-transform">EMPIEZA
+                    GRATIS AHORA</button>
+            </div>
+        </section>
+
+        <footer class="py-12 w-full bg-gray-900 text-gray-400">
+            <div class="container border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2026 HireMind. Impulsado por Inteligencia Artificial.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-xl">
+                    <a href="https://www.linkedin.com/in/camiloandresortegon/" target="_blank"
+                        class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:camilo.ortegonc@outlook.com" class="hover:text-white transition-colors"><i
+                            class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Auth Page -->
+    <div id="auth-page" class="min-h-screen items-center justify-center bg-gray-50 p-6">
+        <div class="w-full max-w-lg bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
+            <div id="login-form-container">
+                <div class="text-center mb-10">
+                    <div
+                        class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-key text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-black text-gray-900" data-i18n="loginFormTitle">Iniciar Sesión</h3>
+                    <p class="text-gray-500 mt-2">Bienvenido de nuevo a HireMind</p>
+                </div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-700" data-i18n="emailLabel">Email</label>
+                        <input type="email" id="login-email"
+                            class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-700"
+                            data-i18n="passwordLabel">Contraseña</label>
+                        <input type="password" id="login-password"
+                            class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            required>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all font-inter"
+                        data-i18n="loginButtonSubmit">Entrar</button>
+                    <div class="text-center text-sm text-gray-500 pt-4">
+                        <span data-i18n="noAccountText">¿No tienes cuenta?</span>
+                        <button type="button" id="switch-to-register-btn"
+                            class="text-blue-600 font-bold hover:underline ml-1" data-i18n="registerLink">Crea una
+                            cuenta gratis</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="register-form-container" class="hidden">
+                <div class="text-center mb-10">
+                    <div
+                        class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-user-plus text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-black text-gray-900" data-i18n="registerFormTitle">Crear Cuenta</h3>
+                </div>
+                <div id="register-success-verification"
+                    class="hidden p-4 mb-6 bg-green-50 border border-green-100 text-green-700 rounded-xl text-sm font-medium animate-bounce">
+                    <i class="fas fa-envelope-open-text mr-2"></i> <span
+                        data-i18n="registrationSuccessVerifyEmail">¡Registro exitoso! Verifica tu correo.</span>
+                </div>
+                <form id="register-form" class="space-y-6">
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-700" data-i18n="emailLabel">Email</label>
+                        <input type="email" id="register-email"
+                            class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-bold text-gray-700"
+                            data-i18n="passwordLabel">Contraseña</label>
+                        <input type="password" id="register-password"
+                            class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                            required>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-green-700 transition-all"
+                        data-i18n="registerButtonSubmit">Unirme Ahora</button>
+                    <div class="text-center text-sm text-gray-500 pt-4">
+                        <span data-i18n="alreadyAccountText">¿Ya tienes cuenta?</span>
+                        <button type="button" id="switch-to-login-btn"
+                            class="text-blue-600 font-bold hover:underline ml-1" data-i18n="loginLink">Inicia
+                            Sesión</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-100 shadow-xl transform -translate-x-full lg:translate-x-0 transition-transform flex flex-col">
+            <div class="p-6 border-b border-gray-50 flex items-center">
+                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-brain text-white text-sm"></i>
+                </div>
+                <h2 class="text-xl font-black text-gray-800 tracking-tight">HireMind</h2>
+            </div>
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a href="#"
+                    class="nav-link flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all group"
+                    data-section="section-home">
+                    <i class="fas fa-th-large w-6 group-hover:scale-110 transition-transform"></i>
+                    <span class="ml-3 font-semibold" data-i18n="navHome">Dashboard</span>
+                </a>
+                <a href="#"
+                    class="nav-link flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all group"
+                    data-section="section-load-cv">
+                    <i class="fas fa-upload w-6"></i><span class="ml-3 font-semibold" data-i18n="navLoadCV">Cargar
+                        CV</span>
+                </a>
+                <a href="#"
+                    class="nav-link flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all group"
+                    data-section="section-verify-offer">
+                    <i class="fas fa-search-dollar w-6"></i><span class="ml-3 font-semibold"
+                        data-i18n="navVerifyOffer">Analizar Vacante</span>
+                </a>
+                <div class="pt-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-widest pl-4">Ajustes</div>
+                <a href="#"
+                    class="nav-link flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all group"
+                    data-section="section-profile">
+                    <i class="fas fa-id-card w-6"></i><span class="ml-3 font-semibold" data-i18n="navMyProfile">Mi
+                        Perfil</span>
+                </a>
+                <a href="#"
+                    class="nav-link flex items-center px-4 py-3 text-gray-500 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all group"
+                    data-section="section-settings">
+                    <i class="fas fa-sliders-h w-6"></i><span class="ml-3 font-semibold" data-i18n="navSettings">Ajustes
+                        JSON</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-gray-50">
+                <button id="sign-out-btn"
+                    class="w-full flex items-center px-4 py-3 text-red-500 rounded-xl hover:bg-red-50 transition-all font-bold">
+                    <i class="fas fa-power-off w-6"></i><span class="ml-3" data-i18n="navSignOut">Salir</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col min-w-0 transition-all">
+            <header
+                class="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 flex items-center justify-between sticky top-0 z-20">
+                <button id="sidebar-toggle"
+                    class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-gray-50 text-gray-600">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="hidden sm:block">
+                    <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest" data-i18n="headerTitle">
+                        HIREMIND ASSISTANT</h2>
+                </div>
+                <button id="language-toggle-btn"
+                    class="px-5 py-2 bg-gray-900 text-white rounded-xl text-xs font-black tracking-widest hover:bg-green-600 transition-colors">
+                    <span data-i18n="languageToggleText">ENGLISH</span>
+                </button>
+            </header>
+
+            <div class="flex-1 p-6 md:p-10 overflow-y-auto">
+                <!-- Section: Home -->
+                <div id="section-home" class="app-section space-y-10">
+                    <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-3xl font-black text-gray-900 mb-2" data-i18n="homeWelcomeTitle">Hola de nuevo
+                        </h3>
+                        <p class="text-gray-500" data-i18n="homeWelcomeSubtitle">Este es tu resumen profesional
+                            actualizado.</p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-12">
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-6 flex items-center">
+                                    <i class="fas fa-history mr-3 text-green-600"></i>Últimos Análisis
+                                </h4>
+                                <div id="home-search-history" class="space-y-4">
+                                    <div class="animate-pulse flex space-x-4">
+                                        <div class="rounded-xl bg-gray-100 h-20 w-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-900 rounded-3xl p-8 text-white relative overflow-hidden">
+                                <div class="relative z-10">
+                                    <h4 class="text-xl font-bold mb-4" data-i18n="homeJobRecommendationsTitle">
+                                        Sugerencias de IA</h4>
+                                    <p class="text-gray-400 text-sm mb-6" data-i18n="homeJobRecommendationsSubtitle">
+                                        Encontramos estas oportunidades basadas en tu perfil.</p>
+                                    <button id="generate-recommendations-btn"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition-all shadow-lg">
+                                        Generar Recomendaciones
+                                    </button>
+                                    <div id="home-job-recommendations-result" class="mt-8"></div>
+                                </div>
+                                <div class="absolute top-0 right-0 p-8 opacity-10"><i
+                                        class="fas fa-lightbulb text-9xl"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Load CV -->
+                <div id="section-load-cv" class="app-section">
+                    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-2xl font-black text-gray-900 mb-4" data-i18n="loadCvTitle">Inteligencia
+                            Documental</h3>
+                        <p class="text-gray-500 mb-10" data-i18n="loadCvSubtitle">Nuestra IA procesará tu PDF para
+                            construir un perfil estructurado.</p>
+                        <form id="form-load-cv" class="space-y-8">
+                            <div
+                                class="p-12 border-4 border-dashed border-gray-100 rounded-3xl bg-gray-50 text-center hover:border-green-300 transition-colors cursor-pointer group relative">
+                                <input type="file" id="cv-file"
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".pdf"
+                                    required>
+                                <div class="text-gray-400 group-hover:text-green-600 transition-colors">
+                                    <i class="fas fa-cloud-upload-alt text-5xl mb-4"></i>
+                                    <p class="text-lg font-bold">Haz clic o arrastra tu PDF aquí</p>
+                                    <p class="text-sm">Tamaño máximo 5MB</p>
+                                </div>
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-gray-900 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-green-600 transition-all tracking-widest">
+                                PROCESAR AHORA
+                            </button>
+                        </form>
+                        <div id="result-load-cv" class="mt-10"></div>
+                    </div>
+                </div>
+
+                <!-- Section: Verify Offer -->
+                <div id="section-verify-offer" class="app-section">
+                    <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-2xl font-black text-gray-900 mb-4" data-i18n="verifyOfferTitle">Análisis
+                            Comparativo</h3>
+                        <p class="text-gray-500 mb-10" data-i18n="verifyOfferSubtitle">Pega el texto de la vacante o
+                            sube una captura de pantalla.</p>
+                        <form id="form-verify-offer" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div>
+                                <label class="block mb-3 text-sm font-bold text-gray-700">Descripción en Texto</label>
+                                <textarea id="offer-text" rows="12"
+                                    class="w-full p-6 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                                    placeholder="Pega aquí los requisitos..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block mb-3 text-sm font-bold text-gray-700">O Subir Captura/Imagen</label>
+                                <div
+                                    class="h-full max-h-[200px] border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center bg-gray-50 relative">
+                                    <input type="file" id="offer-image"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        accept=".jpg,.jpeg,.png">
+                                    <i class="fas fa-camera text-3xl text-gray-300 mb-2"></i>
+                                    <span class="text-xs text-gray-400 font-bold">CARGAR IMGEN</span>
+                                </div>
+                                <button type="submit"
+                                    class="w-full mt-6 bg-green-600 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-green-700 transition-all animate-pulse">
+                                    ANALIZAR COMPATIBILIDAD
+                                </button>
+                            </div>
+                        </form>
+                        <div id="result-verify-offer" class="mt-10"></div>
+                    </div>
+                </div>
+
+                <!-- Section: Profile -->
+                <div id="section-profile" class="app-section">
+                    <div class="max-w-5xl mx-auto">
+                        <div id="profile-content"></div>
+                    </div>
+                </div>
+
+                <!-- Section: Settings -->
+                <div id="section-settings" class="app-section">
+                    <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-2xl font-black text-gray-900 mb-4" data-i18n="settingsTitle">Configuración
+                            Avanzada</h3>
+                        <p class="text-gray-500 mb-10">Manipula tu perfil directamente a través de JSON.</p>
+                        <form id="form-settings" class="space-y-6">
+                            <textarea id="settings-json" rows="20"
+                                class="w-full p-6 bg-gray-900 text-green-400 font-mono text-sm rounded-2xl border-none focus:ring-2 focus:ring-green-500 outline-none"></textarea>
+                            <button type="submit"
+                                class="w-full bg-green-600 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-green-700 transition-all">
+                                GUARDAR CAMBIOS ESTRUCTURALES
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="cv-modal"
+        class="fixed inset-0 bg-gray-900/90 backdrop-blur-sm flex items-center justify-center z-[100] p-6 hidden">
+        <div
+            class="relative bg-white rounded-3xl w-full max-w-5xl h-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h4 class="font-black text-gray-800 tracking-widest text-sm">PREVISUALIZACIÓN DE CV ÓPTIMO</h4>
+                <button
+                    class="close-modal-btn w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-red-500 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="cv-modal-content" class="flex-1 overflow-y-auto p-12 bg-[#f4f4f4]">
+                <!-- CV HTML will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="message-modal"
+        class="fixed inset-0 bg-gray-900/80 backdrop-blur-md flex items-center justify-center z-[200] p-6 hidden">
+        <div class="bg-white rounded-3xl p-10 shadow-2xl max-w-md w-full text-center">
+            <div class="mb-6"><i class="fas fa-info-circle text-5xl text-blue-500"></i></div>
+            <h4 id="message-modal-title" class="text-2xl font-black text-gray-900 mb-4 border-b-4 border-gray-50 pb-4">
+            </h4>
+            <p id="message-modal-content" class="text-gray-600 mb-8 leading-relaxed"></p>
+            <button id="message-modal-close-btn"
+                class="w-full bg-gray-900 text-white font-black py-4 rounded-xl hover:bg-blue-600 transition-all">ENTENDIDO</button>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module" src="./js/app.js"></script>
+</body>
+
+</html>
