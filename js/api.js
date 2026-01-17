@@ -2,7 +2,7 @@ import { currentLanguage } from './i18n.js';
 
 const PROXY_URL = "https://hiremind-proxy.ortegoncamilo00.workers.dev";
 
-export async function callGemini(prompt, forJson = true, model = "gemini-1.5-flash") {
+export async function callGemini(prompt, forJson = true, model = "gemini-2.5-flash") {
     try {
         const payload = {
             model: model,
