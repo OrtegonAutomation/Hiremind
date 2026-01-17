@@ -46,7 +46,7 @@ export async function extractTextFromImage(base64ImageData, mimeType) {
     // For vision, the same proxy can handle it if you adjust the worker logic.
     // For now, we point to the proxy as well.
     const payload = {
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: [
             {
                 role: "user",
